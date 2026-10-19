@@ -1,0 +1,2 @@
+ALTER TABLE game
+    ADD COLUMN chosen_color VARCHAR(255) DEFAULT NULL;

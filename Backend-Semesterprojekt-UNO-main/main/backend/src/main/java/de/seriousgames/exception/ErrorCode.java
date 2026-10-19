@@ -1,0 +1,15 @@
+package de.seriousgames.exception;
+
+
+public enum ErrorCode {
+    DECK_NOT_FOUND,
+    GAME_NOT_FOUND,
+    INVALID_GAME_CONFIGURATION,
+    INVALID_MOVE,
+    NOT_PLAYERS_TURN,
+    INTERNAL_SERVER_ERROR,
+    UNAUTHORIZED,
+    PLAYER_NOT_FOUND,
+    NO_CARDS_LEFT,
+    INVALID_VALUE
+}

@@ -1,0 +1,1009 @@
+openapi: 3.0.3
+info:
+  title: UNO Game API
+  version: 1.0.0
+  description: API for the communication between Front- and Backend
+
+#Needs to be edited
+servers:
+  - url: /api
+
+paths:
+  /games:
+    post:
+      tags:
+        - UNO
+      summary: Create a new game
+      operationId: createGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGameBody'
+            examples:
+              createGame:
+                $ref: '#/components/examples/CreateGameBodyExample'
+
+      responses:
+        '201':
+          description: Game created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameCreatedResponse'
+
+        '400':
+          description: Invalid game configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                invalidConfiguration:
+                  $ref: '#/components/examples/InvalidGameConfigurationExample'
+
+        '404':
+          description: Deck not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                deckNotFound:
+                  $ref: '#/components/examples/DeckNotFoundExample'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+
+  /games/{gameId}:
+    get:
+      tags:
+        - UNO
+      summary: Returns the current game state
+      operationId: getGameState
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Current game state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameState'
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                gameNotFound:
+                  $ref: '#/components/examples/GameNotFoundExample'
+
+
+  /games/{gameId}/drawCard:
+    post:
+      tags:
+        - UNO
+      summary: Draw a card
+      security:
+        - playerTokenAuth: [ ]
+      operationId: drawCard
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Player-Token
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        '200':
+          description: Card successfully drawn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayCardResponse'
+        '401':
+          description: Missing or invalid player token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                gameNotFound:
+                  $ref: '#/components/examples/GameNotFoundExample'
+
+  /games/{gameId}/unoPenalty:
+    post:
+      tags:
+        - UNO
+      summary: Draw two penalty cards for a player who did not call UNO
+      operationId: unoPenalty
+      security:
+        - playerTokenAuth: []
+
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+        - name: X-Player-Token
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        '200':
+          description: UNO penalty applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameState'
+
+        '401':
+          description: Missing or invalid player token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /games/{gameId}/playCard:
+    post:
+      tags:
+        - UNO
+      summary: Play a card
+      operationId: playCard
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Player-Token
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayCardRequest'
+      responses:
+        '200':
+          description: Card successfully played
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayCardResponse'
+        '400':
+          description: Invalid move
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                invalidMove:
+                  $ref: '#/components/examples/InvalidMoveExample'
+
+        '401':
+          description: Missing or invalid player token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                gameNotFound:
+                  $ref: '#/components/examples/GameNotFoundExample'
+
+  /games/{gameId}/hand:
+    get:
+      tags:
+        - UNO
+      summary: Returns the hand cards of the authenticated player
+      operationId: getPlayerHand
+      security:
+        - playerTokenAuth: [ ]
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Player-Token
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        '200':
+          description: Player hand successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerHand'
+
+        '401':
+          description: Missing or invalid player token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                gameNotFound:
+                  $ref: '#/components/examples/GameNotFoundExample'
+
+  /decks:
+    post:
+      tags:
+        - UNO
+      summary: Upload a new card deck
+      description: >
+        The uploaded deck must be a full UNO deck containing 99 cards, as shown in the example.
+      operationId: uploadDeck
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - deck
+                - images
+              properties:
+                deck:
+                  type: string
+                  format: binary
+                  description: JSON file containing a deck matching '#/components/schemas/Deck' '#/components/examples/FullUnoDeck'
+                images:
+                  type: array
+                  description: Card image files referenced by imageName in the deck JSON
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Card deck successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckCreatedResponse'
+              examples:
+                created:
+                  $ref: '#/components/examples/DeckCreatedResponseExample'
+
+        '400':
+          description: Invalid deck
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                invalidDeck:
+                  value: "Missing image files: red_3_2.png, blue_2_1.png"
+
+        '409':
+          description: Deck already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                deckConflict:
+                  $ref: '#/components/examples/DeckConflictExample'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+    get:
+      tags:
+        - UNO
+      summary: List all available decks
+      operationId: getDecks
+
+      responses:
+        '200':
+          description: List of available decks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeckInfo'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+
+
+components:
+
+  securitySchemes:
+    playerTokenAuth:
+      type: apiKey
+      in: header
+      name: X-Player-Token
+
+
+  schemas:
+
+    ApiErrorResponse:
+      type: object
+      properties:
+
+        errorCode:
+          type: string
+          description: Machine-readable error code
+
+        errorMessage:
+          type: string
+          description: Human-readable error message
+
+        timestamp:
+          type: string
+          format: date-time
+          description: Time when the error occurred
+
+      required:
+        - errorCode
+        - errorMessage
+        - timestamp
+
+
+    CreatedPlayer:
+      type: object
+      properties:
+
+        playerId:
+          type: string
+          format: uuid
+
+        playerPosition:
+          type: integer
+          minimum: 0
+
+        isAi:
+          type: boolean
+
+        playerToken:
+          type: string
+          format: uuid
+          description: Token used for X-Player-Token authentication header
+
+      required:
+        - playerId
+        - playerPosition
+        - isAi
+        - playerToken
+
+
+    CreateGameBody:
+      type: object
+      properties:
+
+        deckId:
+          type: string
+          format: uuid
+
+        playerCount:
+          type: integer
+          minimum: 2
+
+        startingCards:
+          type: integer
+          minimum: 1
+
+        withAI:
+          type: boolean
+
+      required:
+        - deckId
+        - playerCount
+        - startingCards
+        - withAI
+
+
+    GameCreatedResponse:
+      type: object
+      properties:
+
+        gameId:
+          type: string
+          format: uuid
+
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreatedPlayer'
+
+        gameState:
+          $ref: '#/components/schemas/GameState'
+
+      required:
+        - gameId
+        - players
+        - gameState
+
+    DeckCard:
+      type: object
+      properties:
+
+        color:
+          type: string
+          enum:
+            - red
+            - blue
+            - green
+            - yellow
+            - black
+
+        value:
+          type: string
+          enum:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+            - "9"
+            - "+2"
+            - "+3"
+            - "-1"
+            - "hourglass"
+            - "cloverleaf"
+
+        variant:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+
+        imageName:
+          type: string
+
+      required:
+        - color
+        - value
+        - variant
+        - imageName
+
+    Deck:
+      type: object
+      properties:
+
+        name:
+          type: string
+
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeckCard'
+          minItems: 99
+          maxItems: 99
+
+      required:
+        - name
+        - cards
+
+
+    DeckCreatedResponse:
+      type: object
+      properties:
+
+        deckName:
+          type: string
+
+        deckId:
+          type: string
+          format: uuid
+
+      required:
+        - deckName
+        - deckId
+
+    GameState:
+      type: object
+      properties:
+        gameId:
+          type: string
+          format: uuid
+
+        gameState:
+          type: string
+          enum:
+            - RUNNING
+            - WAITING
+            - FINISHED
+            - PAUSED
+            - ABORT
+            - CREATED
+
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameStatePlayer'
+
+        currentPlayerId:
+          type: string
+          format: uuid
+
+        nextPlayerId:
+          type: string
+          format: uuid
+
+        direction:
+          type: string
+          enum: [ clockwise, counterclockwise ]
+
+        topDiscardCard:
+          $ref: '#/components/schemas/CardInstance'
+
+      required:
+        - gameId
+        - gameState
+        - players
+        - currentPlayerId
+        - nextPlayerId
+        - direction
+        - topDiscardCard
+
+    PlayerState:
+      type: object
+      properties:
+        playerId:
+          type: string
+          format: uuid
+
+        cardCount:
+          type: integer
+
+        isAi:
+          type: boolean
+      required:
+        - playerId
+        - cardCount
+        - isAi
+
+    GameStatePlayer:
+      type: object
+      properties:
+        playerId:
+          type: string
+          format: uuid
+        playerPosition:
+          type: integer
+          minimum: 0
+        isAi:
+          type: boolean
+        cardCount:
+          type: integer
+          minimum: 0
+      required:
+        - playerId
+        - playerPosition
+        - isAi
+        - cardCount
+
+    DeckInfo:
+      type: object
+      properties:
+        deckId:
+          type: string
+          format: uuid
+
+        deckName:
+          type: string
+
+      required:
+        - deckId
+        - deckName
+
+    CardInstance:
+      type: object
+      properties:
+        cardId:
+          type: string
+          format: uuid
+        imageName:
+          type: string
+        color:
+          type: string
+          enum: [ red, blue, green, yellow, black ]
+        value:
+          type: string
+          enum: [ "0","1","2","3","4","5","6","7","8","9","+2","+3","-1","hourglass","cloverleaf", "reverse" ]
+        variant:
+          type: integer
+          enum: [ 1,2,3,4 ]
+
+      required:
+        - cardId
+        - imageName
+        - color
+        - value
+        - variant
+
+    PlayCardRequest:
+      type: object
+      properties:
+        cardId:
+          type: string
+          format: uuid
+          description: The card that is being played
+
+        cardToGiveId:
+          type: string
+          format: uuid
+          description: card to give to another player when playing the -1 special card
+
+        targetPlayerId:
+          type: string
+          format: uuid
+          description: Player who receives the selected card (when playing the -1 special card).
+
+        chosenColor:
+          type: string
+          enum: [ red, blue, green, yellow ]
+          description: Required when playing the cloverleaf card to select the next color.
+
+        answer:
+          type: integer
+          description: Required for number cards (0–9) as the player's submitted result. Ignored for special cards.
+
+      required:
+        - cardId
+
+    PlayerHand:
+      type: object
+      properties:
+        gameId:
+          type: string
+          format: uuid
+
+        playerId:
+          type: string
+          format: uuid
+
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardInstance'
+
+        cardCount:
+          type: integer
+
+      required:
+        - gameId
+        - playerId
+        - cards
+        - cardCount
+
+    AiAction:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - PLAY_CARD
+            - DRAW_CARD
+            - DRAW_CARDS
+            - CHOOSE_COLOR
+            - GIVE_CARD
+
+        playerId:
+          type: string
+          format: uuid
+
+        targetPlayerId:
+          type: string
+          format: uuid
+          nullable: true
+
+        card:
+          $ref: '#/components/schemas/CardInstance'
+
+        amount:
+          type: integer
+          nullable: true
+
+        chosenColor:
+          type: string
+          enum: [ red, blue, green, yellow ]
+          nullable: true
+
+        message:
+          type: string
+          nullable: true
+
+      required:
+        - type
+        - playerId
+
+    PlayCardResponse:
+      type: object
+      properties:
+        gameState:
+          $ref: '#/components/schemas/GameState'
+
+        chosenCardColor:
+          type: string
+          enum: [ red, blue, green, yellow ]
+          nullable: true
+          description: Optional selected card value
+
+        aiActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiAction'
+          description: Actions performed automatically by the AI after the player move
+
+      required:
+        - gameState
+
+  examples:
+
+    FullUnoDeck:
+      summary: Reduced UNO deck (no duplicates per number)
+      value:
+        name: "UNO Math Deck (Unique Cards)"
+        cards:
+
+          #RED
+          - { color: red, value: "0", variant: 1, imageName: "red_0_1.png" }
+          - { color: red, value: "0", variant: 2, imageName: "red_0_2.png" }
+          - { color: red, value: "1", variant: 1, imageName: "red_1_1.png" }
+          - { color: red, value: "1", variant: 2, imageName: "red_1_2.png" }
+          - { color: red, value: "2", variant: 1, imageName: "red_2_1.png" }
+          - { color: red, value: "2", variant: 2, imageName: "red_2_2.png" }
+          - { color: red, value: "3", variant: 1, imageName: "red_3_1.png" }
+          - { color: red, value: "3", variant: 2, imageName: "red_3_2.png" }
+          - { color: red, value: "4", variant: 1, imageName: "red_4_1.png" }
+          - { color: red, value: "4", variant: 2, imageName: "red_4_2.png" }
+          - { color: red, value: "5", variant: 1, imageName: "red_5_1.png" }
+          - { color: red, value: "5", variant: 2, imageName: "red_5_2.png" }
+          - { color: red, value: "6", variant: 1, imageName: "red_6_1.png" }
+          - { color: red, value: "6", variant: 2, imageName: "red_6_2.png" }
+          - { color: red, value: "7", variant: 1, imageName: "red_7_1.png" }
+          - { color: red, value: "7", variant: 2, imageName: "red_7_2.png" }
+          - { color: red, value: "8", variant: 1, imageName: "red_8_1.png" }
+          - { color: red, value: "8", variant: 2, imageName: "red_8_2.png" }
+          - { color: red, value: "9", variant: 1, imageName: "red_9_1.png" }
+          - { color: red, value: "9", variant: 2, imageName: "red_9_2.png" }
+
+          # BLUE
+          - { color: blue, value: "0", variant: 1, imageName: "blue_0_1.png" }
+          - { color: blue, value: "0", variant: 2, imageName: "blue_0_2.png" }
+          - { color: blue, value: "1", variant: 1, imageName: "blue_1_1.png" }
+          - { color: blue, value: "1", variant: 2, imageName: "blue_1_2.png" }
+          - { color: blue, value: "2", variant: 1, imageName: "blue_2_1.png" }
+          - { color: blue, value: "2", variant: 2, imageName: "blue_2_2.png" }
+          - { color: blue, value: "3", variant: 1, imageName: "blue_3_1.png" }
+          - { color: blue, value: "3", variant: 2, imageName: "blue_3_2.png" }
+          - { color: blue, value: "4", variant: 1, imageName: "blue_4_1.png" }
+          - { color: blue, value: "4", variant: 2, imageName: "blue_4_2.png" }
+          - { color: blue, value: "5", variant: 1, imageName: "blue_5_1.png" }
+          - { color: blue, value: "5", variant: 2, imageName: "blue_5_2.png" }
+          - { color: blue, value: "6", variant: 1, imageName: "blue_6_1.png" }
+          - { color: blue, value: "6", variant: 2, imageName: "blue_6_2.png" }
+          - { color: blue, value: "7", variant: 1, imageName: "blue_7_1.png" }
+          - { color: blue, value: "7", variant: 2, imageName: "blue_7_2.png" }
+          - { color: blue, value: "8", variant: 1, imageName: "blue_8_1.png" }
+          - { color: blue, value: "8", variant: 2, imageName: "blue_8_2.png" }
+          - { color: blue, value: "9", variant: 1, imageName: "blue_9_1.png" }
+          - { color: blue, value: "9", variant: 2, imageName: "blue_9_2.png" }
+
+          # GREEN
+          - { color: green, value: "0", variant: 1, imageName: "green_0_1.png" }
+          - { color: green, value: "0", variant: 2, imageName: "green_0_2.png" }
+          - { color: green, value: "1", variant: 1, imageName: "green_1_1.png" }
+          - { color: green, value: "1", variant: 2, imageName: "green_1_2.png" }
+          - { color: green, value: "2", variant: 1, imageName: "green_2_1.png" }
+          - { color: green, value: "2", variant: 2, imageName: "green_2_2.png" }
+          - { color: green, value: "3", variant: 1, imageName: "green_3_1.png" }
+          - { color: green, value: "3", variant: 2, imageName: "green_3_2.png" }
+          - { color: green, value: "4", variant: 1, imageName: "green_4_1.png" }
+          - { color: green, value: "4", variant: 2, imageName: "green_4_2.png" }
+          - { color: green, value: "5", variant: 1, imageName: "green_5_1.png" }
+          - { color: green, value: "5", variant: 2, imageName: "green_5_2.png" }
+          - { color: green, value: "6", variant: 1, imageName: "green_6_1.png" }
+          - { color: green, value: "6", variant: 2, imageName: "green_6_2.png" }
+          - { color: green, value: "7", variant: 1, imageName: "green_7_1.png" }
+          - { color: green, value: "7", variant: 2, imageName: "green_7_2.png" }
+          - { color: green, value: "8", variant: 1, imageName: "green_8_1.png" }
+          - { color: green, value: "8", variant: 2, imageName: "green_8_2.png" }
+          - { color: green, value: "9", variant: 1, imageName: "green_9_1.png" }
+          - { color: green, value: "9", variant: 2, imageName: "green_9_2.png" }
+
+          # YELLOW
+          - { color: yellow, value: "0", variant: 1, imageName: "yellow_0_1.png" }
+          - { color: yellow, value: "0", variant: 2, imageName: "yellow_0_2.png" }
+          - { color: yellow, value: "1", variant: 1, imageName: "yellow_1_1.png" }
+          - { color: yellow, value: "1", variant: 2, imageName: "yellow_1_2.png" }
+          - { color: yellow, value: "2", variant: 1, imageName: "yellow_2_1.png" }
+          - { color: yellow, value: "2", variant: 2, imageName: "yellow_2_2.png" }
+          - { color: yellow, value: "3", variant: 1, imageName: "yellow_3_1.png" }
+          - { color: yellow, value: "3", variant: 2, imageName: "yellow_3_2.png" }
+          - { color: yellow, value: "4", variant: 1, imageName: "yellow_4_1.png" }
+          - { color: yellow, value: "4", variant: 2, imageName: "yellow_4_2.png" }
+          - { color: yellow, value: "5", variant: 1, imageName: "yellow_5_1.png" }
+          - { color: yellow, value: "5", variant: 2, imageName: "yellow_5_2.png" }
+          - { color: yellow, value: "6", variant: 1, imageName: "yellow_6_1.png" }
+          - { color: yellow, value: "6", variant: 2, imageName: "yellow_6_2.png" }
+          - { color: yellow, value: "7", variant: 1, imageName: "yellow_7_1.png" }
+          - { color: yellow, value: "7", variant: 2, imageName: "yellow_7_2.png" }
+          - { color: yellow, value: "8", variant: 1, imageName: "yellow_8_1.png" }
+          - { color: yellow, value: "8", variant: 2, imageName: "yellow_8_2.png" }
+          - { color: yellow, value: "9", variant: 1, imageName: "yellow_9_1.png" }
+          - { color: yellow, value: "9", variant: 2, imageName: "yellow_9_2.png" }
+
+          # BLACK
+          - { color: black, value: "reverse", variant: 1, imageName: "reverse_1.png" }
+          - { color: black, value: "reverse", variant: 2, imageName: "reverse_2.png" }
+          - { color: black, value: "reverse", variant: 3, imageName: "reverse_3.png" }
+          - { color: black, value: "+2", variant: 1, imageName: "+2_1.png" }
+          - { color: black, value: "+2", variant: 2, imageName: "+2_2.png" }
+          - { color: black, value: "+2", variant: 3, imageName: "+2_3.png" }
+          - { color: black, value: "+3", variant: 1, imageName: "+3_1.png" }
+          - { color: black, value: "+3", variant: 2, imageName: "+3_2.png" }
+          - { color: black, value: "+3", variant: 3, imageName: "+3_3.png" }
+          - { color: black, value: "-1", variant: 1, imageName: "-1_1.png" }
+          - { color: black, value: "-1", variant: 2, imageName: "-1_2.png" }
+          - { color: black, value: "-1", variant: 3, imageName: "-1_3.png" }
+          - { color: black, value: "hourglass", variant: 1, imageName: "hourglass_1.png" }
+          - { color: black, value: "hourglass", variant: 2, imageName: "hourglass_2.png" }
+          - { color: black, value: "hourglass", variant: 3, imageName: "hourglass_3.png" }
+          - { color: black, value: "cloverleaf", variant: 1, imageName: "cloverleaf_1.png" }
+          - { color: black, value: "cloverleaf", variant: 2, imageName: "cloverleaf_2.png" }
+          - { color: black, value: "cloverleaf", variant: 3, imageName: "cloverleaf_3.png" }
+          - { color: black, value: "cloverleaf", variant: 4, imageName: "cloverleaf_4.png" }
+
+    CreateGameBodyExample:
+      value:
+        deckId: "67006c66-ff60-4ee9-b9c8-2fb77544a2a5"
+        playerCount: 2
+        startingCards: 5
+        withAI: true
+
+    DeckCreatedResponseExample:
+      value:
+        deckName: "Example Deck"
+        deckId: "b55d5802-c089-43d4-9300-5dd1a7338497"
+
+    DeckNotFoundExample:
+      value:
+        errorCode: "DECK_NOT_FOUND"
+        errorMessage: "Deck with id 67006c66-ff60-4ee9-b9c8-2fb77544a2a5 not found"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    GameNotFoundExample:
+      value:
+        errorCode: "GAME_NOT_FOUND"
+        errorMessage: "Game not found"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    InvalidGameConfigurationExample:
+      value:
+        errorCode: "INVALID_GAME_CONFIGURATION"
+        errorMessage: "AI games only support exactly 2 players"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    InvalidMoveExample:
+      value:
+        errorCode: "INVALID_MOVE"
+        errorMessage: "Card cannot be played"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    UnauthorizedExample:
+      value:
+        errorCode: "UNAUTHORIZED"
+        errorMessage: "Missing or invalid player token"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    InvalidDeckExample:
+      value:
+        errorCode: "DECK_INVALID"
+        errorMessage: "Deck must contain exactly 99 cards"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    DeckConflictExample:
+      value:
+        errorCode: "DECK_ALREADY_EXISTS"
+        errorMessage: "Deck already exists"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    InternalServerErrorExample:
+      value:
+        errorCode: "INTERNAL_SERVER_ERROR"
+        errorMessage: "Unexpected server error"
+        timestamp: "2026-05-14T12:00:00Z"
+
+    NoDecksFoundExample:
+      value:
+        errorCode: "NO_DECKS_FOUND"
+        errorMessage: "No Decks where found"
+        timestamp: "2026-05-14T12:00:00Z"

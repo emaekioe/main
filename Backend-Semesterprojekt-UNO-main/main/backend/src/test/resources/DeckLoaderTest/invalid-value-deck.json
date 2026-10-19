@@ -1,0 +1,599 @@
+{
+  "name": "UNO Math Deck (Unique Cards)",
+  "cards": [
+    {
+      "color": "red",
+      "value": "0",
+      "variant": 1,
+      "imageName": "red_0_1.png"
+    },
+    {
+      "color": "red",
+      "value": "0",
+      "variant": 2,
+      "imageName": "red_0_2.png"
+    },
+    {
+      "color": "red",
+      "value": "1",
+      "variant": 1,
+      "imageName": "red_1_1.png"
+    },
+    {
+      "color": "red",
+      "value": "1",
+      "variant": 2,
+      "imageName": "red_1_2.png"
+    },
+    {
+      "color": "red",
+      "value": "2",
+      "variant": 1,
+      "imageName": "red_2_1.png"
+    },
+    {
+      "color": "red",
+      "value": "2",
+      "variant": 2,
+      "imageName": "red_2_2.png"
+    },
+    {
+      "color": "red",
+      "value": "3",
+      "variant": 1,
+      "imageName": "red_3_1.png"
+    },
+    {
+      "color": "red",
+      "value": "3",
+      "variant": 2,
+      "imageName": "red_3_2.png"
+    },
+    {
+      "color": "red",
+      "value": "4",
+      "variant": 1,
+      "imageName": "red_4_1.png"
+    },
+    {
+      "color": "red",
+      "value": "4",
+      "variant": 2,
+      "imageName": "red_4_2.png"
+    },
+    {
+      "color": "red",
+      "value": "5",
+      "variant": 1,
+      "imageName": "red_5_1.png"
+    },
+    {
+      "color": "red",
+      "value": "5",
+      "variant": 2,
+      "imageName": "red_5_2.png"
+    },
+    {
+      "color": "red",
+      "value": "6",
+      "variant": 1,
+      "imageName": "red_6_1.png"
+    },
+    {
+      "color": "red",
+      "value": "6",
+      "variant": 2,
+      "imageName": "red_6_2.png"
+    },
+    {
+      "color": "red",
+      "value": "7",
+      "variant": 1,
+      "imageName": "red_7_1.png"
+    },
+    {
+      "color": "red",
+      "value": "7",
+      "variant": 2,
+      "imageName": "red_7_2.png"
+    },
+    {
+      "color": "red",
+      "value": "8",
+      "variant": 1,
+      "imageName": "red_8_1.png"
+    },
+    {
+      "color": "red",
+      "value": "8",
+      "variant": 2,
+      "imageName": "red_8_2.png"
+    },
+    {
+      "color": "red",
+      "value": "9",
+      "variant": 1,
+      "imageName": "red_9_1.png"
+    },
+    {
+      "color": "red",
+      "value": "10",
+      "variant": 2,
+      "imageName": "red_9_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "0",
+      "variant": 1,
+      "imageName": "blue_0_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "0",
+      "variant": 2,
+      "imageName": "blue_0_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "1",
+      "variant": 1,
+      "imageName": "blue_1_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "1",
+      "variant": 2,
+      "imageName": "blue_1_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "2",
+      "variant": 1,
+      "imageName": "blue_2_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "2",
+      "variant": 2,
+      "imageName": "blue_2_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "3",
+      "variant": 1,
+      "imageName": "blue_3_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "3",
+      "variant": 2,
+      "imageName": "blue_3_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "4",
+      "variant": 1,
+      "imageName": "blue_4_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "4",
+      "variant": 2,
+      "imageName": "blue_4_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "5",
+      "variant": 1,
+      "imageName": "blue_5_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "5",
+      "variant": 2,
+      "imageName": "blue_5_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "6",
+      "variant": 1,
+      "imageName": "blue_6_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "6",
+      "variant": 2,
+      "imageName": "blue_6_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "7",
+      "variant": 1,
+      "imageName": "blue_7_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "7",
+      "variant": 2,
+      "imageName": "blue_7_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "8",
+      "variant": 1,
+      "imageName": "blue_8_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "8",
+      "variant": 2,
+      "imageName": "blue_8_2.png"
+    },
+    {
+      "color": "blue",
+      "value": "9",
+      "variant": 1,
+      "imageName": "blue_9_1.png"
+    },
+    {
+      "color": "blue",
+      "value": "9",
+      "variant": 2,
+      "imageName": "blue_9_2.png"
+    },
+    {
+      "color": "green",
+      "value": "0",
+      "variant": 1,
+      "imageName": "green_0_1.png"
+    },
+    {
+      "color": "green",
+      "value": "0",
+      "variant": 2,
+      "imageName": "green_0_2.png"
+    },
+    {
+      "color": "green",
+      "value": "1",
+      "variant": 1,
+      "imageName": "green_1_1.png"
+    },
+    {
+      "color": "green",
+      "value": "1",
+      "variant": 2,
+      "imageName": "green_1_2.png"
+    },
+    {
+      "color": "green",
+      "value": "2",
+      "variant": 1,
+      "imageName": "green_2_1.png"
+    },
+    {
+      "color": "green",
+      "value": "2",
+      "variant": 2,
+      "imageName": "green_2_2.png"
+    },
+    {
+      "color": "green",
+      "value": "3",
+      "variant": 1,
+      "imageName": "green_3_1.png"
+    },
+    {
+      "color": "green",
+      "value": "3",
+      "variant": 2,
+      "imageName": "green_3_2.png"
+    },
+    {
+      "color": "green",
+      "value": "4",
+      "variant": 1,
+      "imageName": "green_4_1.png"
+    },
+    {
+      "color": "green",
+      "value": "4",
+      "variant": 2,
+      "imageName": "green_4_2.png"
+    },
+    {
+      "color": "green",
+      "value": "5",
+      "variant": 1,
+      "imageName": "green_5_1.png"
+    },
+    {
+      "color": "green",
+      "value": "5",
+      "variant": 2,
+      "imageName": "green_5_2.png"
+    },
+    {
+      "color": "green",
+      "value": "6",
+      "variant": 1,
+      "imageName": "green_6_1.png"
+    },
+    {
+      "color": "green",
+      "value": "6",
+      "variant": 2,
+      "imageName": "green_6_2.png"
+    },
+    {
+      "color": "green",
+      "value": "7",
+      "variant": 1,
+      "imageName": "green_7_1.png"
+    },
+    {
+      "color": "green",
+      "value": "7",
+      "variant": 2,
+      "imageName": "green_7_2.png"
+    },
+    {
+      "color": "green",
+      "value": "8",
+      "variant": 1,
+      "imageName": "green_8_1.png"
+    },
+    {
+      "color": "green",
+      "value": "8",
+      "variant": 2,
+      "imageName": "green_8_2.png"
+    },
+    {
+      "color": "green",
+      "value": "9",
+      "variant": 1,
+      "imageName": "green_9_1.png"
+    },
+    {
+      "color": "green",
+      "value": "9",
+      "variant": 2,
+      "imageName": "green_9_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "0",
+      "variant": 1,
+      "imageName": "yellow_0_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "0",
+      "variant": 2,
+      "imageName": "yellow_0_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "1",
+      "variant": 1,
+      "imageName": "yellow_1_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "1",
+      "variant": 2,
+      "imageName": "yellow_1_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "2",
+      "variant": 1,
+      "imageName": "yellow_2_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "2",
+      "variant": 2,
+      "imageName": "yellow_2_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "3",
+      "variant": 1,
+      "imageName": "yellow_3_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "3",
+      "variant": 2,
+      "imageName": "yellow_3_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "4",
+      "variant": 1,
+      "imageName": "yellow_4_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "4",
+      "variant": 2,
+      "imageName": "yellow_4_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "5",
+      "variant": 1,
+      "imageName": "yellow_5_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "5",
+      "variant": 2,
+      "imageName": "yellow_5_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "6",
+      "variant": 1,
+      "imageName": "yellow_6_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "6",
+      "variant": 2,
+      "imageName": "yellow_6_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "7",
+      "variant": 1,
+      "imageName": "yellow_7_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "7",
+      "variant": 2,
+      "imageName": "yellow_7_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "8",
+      "variant": 1,
+      "imageName": "yellow_8_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "8",
+      "variant": 2,
+      "imageName": "yellow_8_2.png"
+    },
+    {
+      "color": "yellow",
+      "value": "9",
+      "variant": 1,
+      "imageName": "yellow_9_1.png"
+    },
+    {
+      "color": "yellow",
+      "value": "9",
+      "variant": 2,
+      "imageName": "yellow_9_2.png"
+    },
+    {
+      "color": "black",
+      "value": "reverse",
+      "variant": 1,
+      "imageName": "reverse_1.png"
+    },
+    {
+      "color": "black",
+      "value": "reverse",
+      "variant": 2,
+      "imageName": "reverse_2.png"
+    },
+    {
+      "color": "black",
+      "value": "reverse",
+      "variant": 3,
+      "imageName": "reverse_3.png"
+    },
+    {
+      "color": "black",
+      "value": "+2",
+      "variant": 1,
+      "imageName": "+2_1.png"
+    },
+    {
+      "color": "black",
+      "value": "+2",
+      "variant": 2,
+      "imageName": "+2_2.png"
+    },
+    {
+      "color": "black",
+      "value": "+2",
+      "variant": 3,
+      "imageName": "+2_3.png"
+    },
+    {
+      "color": "black",
+      "value": "+3",
+      "variant": 1,
+      "imageName": "+3_1.png"
+    },
+    {
+      "color": "black",
+      "value": "+3",
+      "variant": 2,
+      "imageName": "+3_2.png"
+    },
+    {
+      "color": "black",
+      "value": "+3",
+      "variant": 3,
+      "imageName": "+3_3.png"
+    },
+    {
+      "color": "black",
+      "value": "-1",
+      "variant": 1,
+      "imageName": "-1_1.png"
+    },
+    {
+      "color": "black",
+      "value": "-1",
+      "variant": 2,
+      "imageName": "-1_2.png"
+    },
+    {
+      "color": "black",
+      "value": "-1",
+      "variant": 3,
+      "imageName": "-1_3.png"
+    },
+    {
+      "color": "black",
+      "value": "hourglass",
+      "variant": 1,
+      "imageName": "hourglass_1.png"
+    },
+    {
+      "color": "black",
+      "value": "hourglass",
+      "variant": 2,
+      "imageName": "hourglass_2.png"
+    },
+    {
+      "color": "black",
+      "value": "hourglass",
+      "variant": 3,
+      "imageName": "hourglass_3.png"
+    },
+    {
+      "color": "black",
+      "value": "cloverleaf",
+      "variant": 1,
+      "imageName": "cloverleaf_1.png"
+    },
+    {
+      "color": "black",
+      "value": "cloverleaf",
+      "variant": 2,
+      "imageName": "cloverleaf_2.png"
+    },
+    {
+      "color": "black",
+      "value": "cloverleaf",
+      "variant": 3,
+      "imageName": "cloverleaf_3.png"
+    },
+    {
+      "color": "black",
+      "value": "cloverleaf",
+      "variant": 4,
+      "imageName": "cloverleaf_4.png"
+    }
+  ]
+}
