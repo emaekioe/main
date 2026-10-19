@@ -1,0 +1,14 @@
+{
+  "minPlayers": 2,
+  "maxPlayers": 6,
+  "initialHandSize": 7,
+  "drawRule": "draw_until_playable",
+  "winCondition": "empty_hand",
+  "matchingRules": ["color", "number"],
+  "multiCardPlay": false,
+  "timeoutSeconds": 30,
+  "penalties": {
+    "missingAnnouncement": { "drawCards": 2 },
+    "illegalPlay":         { "drawCards": 1 }
+  }
+}
