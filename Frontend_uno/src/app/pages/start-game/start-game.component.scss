@@ -1,0 +1,419 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24px 40px 80px 24px;
+  overflow: visible;
+  overscroll-behavior: contain;
+}
+
+.content {
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+}
+
+.page-header {
+  width: 100%;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.deck-row {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 28px;
+}
+
+.deck-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+  align-items: flex-start;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.deck-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  width: 240px;
+  padding: 28px 22px 22px;
+  border-radius: 14px;
+  border: 3px solid #ccc;
+  background: white;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &:hover {
+    border-color: #888;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+    transform: translateY(-2px);
+  }
+}
+
+.deck-card {
+  @extend .card;
+  flex: 0 0 auto;
+  border-top: 5px solid #334bff;
+
+  &.selected {
+    border-color: #334bff;
+    box-shadow: 0 4px 20px rgba(51, 75, 255, 0.28);
+  }
+}
+
+.deck-icon {
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.deck-symbol {
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  color: #ff3347;
+  font-family: 'Georgia', serif;
+  letter-spacing: -1px;
+
+  &.det {
+    color: #334bff;
+    font-style: normal;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+}
+
+.deck-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.deck-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: 72px;
+}
+
+.deck-preview img {
+  width: 46px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #f0f0f0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transform: none;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #334bff;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.scroll-arrow.left {
+  left: -20px;
+}
+
+.scroll-arrow.right {
+  right: -20px;
+}
+
+.scroll-arrow:hover {
+  background: #1a35e0;
+}
+.empty-deck-state {
+  width: 100%;
+  max-width: 520px;
+  padding: 28px 30px;
+  margin: 0 0 28px 0;
+  border-radius: 14px;
+  background: white;
+  border-top: 5px solid #334bff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.empty-deck-state h2 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  border: none;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.empty-deck-state p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.error {
+  color: #ff3347;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.bottom-section {
+  width: 100%;
+  margin-top: 18px;
+  margin-bottom: 64px;
+  padding-bottom: 0;
+}
+
+.start-button {
+  min-width: 185px;
+  height: 54px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #334bff;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: #1a35e0;
+  }
+
+  &:disabled {
+    background-color: #6b6b6b;
+    cursor: not-allowed;
+  }
+}
+
+.upload-section {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.upload-section h2 {
+  width: 100%;
+  margin: 0 0 20px 0;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.upload-content {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.upload-card,
+.example-card {
+  @extend .card;
+  cursor: default;
+  width: 260px;
+
+  &:hover {
+    transform: none;
+  }
+}
+
+.json-example {
+  border-top: 5px solid #f0c51b;
+
+  &:hover {
+    border-top-color: #f0c51b;
+  }
+}
+
+.action-example {
+  border-top: 5px solid #ff3347;
+
+  &:hover {
+    border-top-color: #ff3347;
+  }
+}
+
+.upload-card h3,
+.example-card h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.example-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.example-button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: auto;
+}
+
+.json-button {
+  background-color: #f0c51b;
+  color: white;
+
+  &:hover {
+    background-color: #ddb100;
+  }
+}
+
+.action-button {
+  background-color: #ff3347;
+
+  &:hover {
+    background-color: #cc0000;
+  }
+}
+
+.upload-card {
+  @extend .card;
+  border-top: 5px solid #27a85c;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  cursor: default;
+
+  &:hover {
+    border-top-color: #27a85c;
+    transform: none;
+  }
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+}
+
+.upload-label input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: #555;
+}
+
+.upload-button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #27a85c;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 4px;
+
+  &:hover:not(:disabled) {
+    background-color: #1f8a4b;
+  }
+
+  &:disabled {
+    background-color: #6b6b6b;
+    cursor: not-allowed;
+  }
+}
+
+.upload-message {
+  margin: 0;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+}
+
+@media (max-width: 1200px) {
+  .content {
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 800px) {
+  .page {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  .upload-section h2 {
+    font-size: 22px;
+  }
+
+  .scroll-arrow.left {
+    left: -8px;
+  }
+
+  .scroll-arrow.right {
+    right: -8px;
+  }
+}
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  .deck-card,
+  .upload-card,
+  .example-card {
+    width: 220px;
+  }
+}

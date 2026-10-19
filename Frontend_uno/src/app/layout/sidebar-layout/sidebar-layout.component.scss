@@ -1,0 +1,58 @@
+.layout {
+  display: flex;
+  height: 100vh;
+
+  .sidebar {
+    width: 260px;
+    background: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+
+    .logo-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .logo-img {
+      width: 170px;
+      height: auto;
+      object-fit: contain;
+    }
+
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        padding: 20px;
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid #333;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #2d2d2d;
+        }
+
+        &.active {
+          background: #666;
+        }
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    background: #ddd;
+    padding: 40px;
+    overflow-y: auto;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+}

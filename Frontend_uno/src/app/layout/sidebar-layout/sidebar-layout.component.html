@@ -1,0 +1,17 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <img src="/menu_logo.png" alt="Math UNO Logo" class="logo-img">
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/start-game" routerLinkActive="active">Start game</a>
+      <a routerLink="/game-rules" routerLinkActive="active">Game rules</a>
+      <a routerLink="/configuration" routerLinkActive="active">Configuration</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

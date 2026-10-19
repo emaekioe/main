@@ -1,0 +1,152 @@
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <h1>Select a card deck</h1>
+    </div>
+    <div class="deck-row">
+      @if (canScrollLeft) {
+        <button class="scroll-arrow left" type="button" (click)="scrollDecks('left')">‹</button>
+      }
+
+      <div class="deck-grid" #deckScroller (scroll)="onDeckScroll()">
+      @for (deck of decks; track deck.deckId) {
+        <div
+          class="deck-card"
+          [class.selected]="selectedDeckId === deck.deckId"
+          (click)="selectDeck(deck.deckId)"
+        >
+          <div class="deck-icon">
+        <span class="deck-symbol det">
+          {{ (deck.deckName || 'UNO').slice(0, 3).toUpperCase() }}
+        </span>
+          </div>
+
+          <div class="deck-name">{{ deck.deckName }}</div>
+          <div class="deck-preview">
+            <img
+              [ngSrc]="deckImageUrl(deck.deckId, 'red_0_1.png')"
+              alt="red card"
+              width="120"
+              height="180"
+            />
+
+            <img
+              [ngSrc]="deckImageUrl(deck.deckId, 'blue_1_1.png')"
+              alt="blue card"
+              width="120"
+              height="180"
+            />
+
+            <img
+              [ngSrc]="deckImageUrl(deck.deckId, 'yellow_2_1.png')"
+              alt="yellow card"
+              width="120"
+              height="180"
+            />
+
+            <img
+              [ngSrc]="deckImageUrl(deck.deckId, 'green_3_1.png')"
+              alt="green card"
+              width="120"
+              height="180"
+            />
+          </div>
+        </div>
+      }
+        @if (canScrollRight) {
+          <button class="scroll-arrow right" type="button" (click)="scrollDecks('right')">›</button>
+        }
+      </div>
+      @if (decks.length === 0 && !error) {
+        <div class="empty-deck-state">
+          <h2>No card decks available yet</h2>
+          <p>Upload your first card deck to start a game.</p>
+        </div>
+      }
+    </div>
+
+
+    @if (error) {
+      <div class="error">{{ error }}</div>
+    }
+
+    <div class="bottom-section">
+      <button
+        class="start-button"
+        [disabled]="!selectedDeckId || loading"
+        (click)="startGame()"
+      >
+        {{ loading ? 'Starting...' : 'Start game' }}
+      </button>
+    </div>
+    <div class="upload-section">
+      <h2>Add your own deck</h2>
+
+      <div class="upload-content">
+        <div class="upload-card">
+          <h3>Upload deck</h3>
+          <label class="upload-label">
+            JSON file
+            <input
+              type="file"
+              accept=".json,application/json"
+              (change)="onJsonSelected($event)"
+            />
+          </label>
+
+          <label class="upload-label">
+            Card images (99 PNG files)
+            <input
+              type="file"
+              accept="image/png"
+              multiple
+              (change)="onImagesSelected($event)"
+            />
+          </label>
+
+          <button
+            class="upload-button"
+            type="button"
+            (click)="uploadDeck()"
+            [disabled]="uploading"
+          >
+            {{ uploading ? 'Uploading...' : 'Upload deck' }}
+          </button>
+
+          @if (message) {
+            <p class="upload-message">{{ message }}</p>
+          }
+        </div>
+        <div class="example-card json-example">
+          <h3>Need a JSON example?</h3>
+          <p>
+            Download an example JSON file and use it as a template for your own deck.
+          </p>
+
+          <button
+            class="example-button json-button"
+            type="button"
+            (click)="downloadJsonExample()"
+          >
+            Download JSON example
+          </button>
+        </div>
+
+        <div class="example-card action-example">
+          <h3>Need action cards?</h3>
+          <p>
+            Download the required action card images and add them to your deck images.
+          </p>
+
+          <button
+            class="example-button action-button"
+            type="button"
+            (click)="downloadActionCards()"
+          >
+            Download action card images
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

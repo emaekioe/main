@@ -1,0 +1,479 @@
+
+<div class="game-layout">
+  @if (showPassScreen && pendingNextPlayerIndex !== null) {
+    <div class="pass-screen">
+      <div class="pass-card">
+        <h2>{{ isInitialPassScreen ? 'First player' : 'Next player' }}</h2>
+
+        @if (passScreenInfo) {
+          <p class="skip-info">
+            {{ passScreenInfo }}
+          </p>
+        }
+
+        <p>
+          Please pass the device to
+
+          @if (gameState.players[pendingNextPlayerIndex]) {
+            <strong>
+              {{ displayPlayerName(gameState.players[pendingNextPlayerIndex].playerId) }}
+            </strong>
+          }
+        </p>
+
+        <button type="button" class="pass-btn" (click)="confirmNextPlayer()">
+          {{ isInitialPassScreen ? 'Start game' : 'Continue' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="top-bar">
+    <div class="title-area">
+      <img
+        ngSrc="/menu_logo.png"
+        alt="Math UNO Logo"
+        class="game-logo"
+        width="580"
+        height="542"
+      />
+    </div>
+
+    <div class="top-actions">
+      <button class="rules-btn" type="button" (click)="openPlayers()">Players</button>
+
+      <button class="rules-btn" type="button" (click)="openRules()">Game rules</button>
+
+      <button class="exit-btn" type="button" (click)="openExitConfirm()">✕ Exit</button>
+    </div>
+  </div>
+
+  @if (gameState) {
+    <div class="info-strip">
+      <div class="info-item">
+        <span class="info-label">Current player</span>
+        <span class="info-value">{{ displayPlayerName(getVisibleCurrentPlayerId()) }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">Next player</span>
+        <span class="info-value">{{ displayPlayerName(getVisibleNextPlayerId()) }}</span>
+      </div>
+    </div>
+
+    <div class="play-area" #playArea>
+      @if (showAiTurn) {
+        <div class="ai-turn-overlay">
+          <div class="ai-turn-status">
+            <span class="ai-status-dot"></span>
+            <span>{{ aiTurnMessage }}</span>
+          </div>
+        </div>
+      }
+
+      <div class="opponent-table">
+        @for (player of getRotatedOtherPlayers(); track player; let i = $index) {
+          <div
+            class="opponent-seat"
+            [ngClass]="getOpponentPositionClass(i)"
+          >
+            <div class="opponent-name">
+              <span class="opponent-name-text">
+                {{ displayPlayerName(player.playerId) }}
+              </span>
+
+              <span class="card-count-badge">
+                <img
+                  class="card-count-icon"
+                  ngSrc="/card-back.png"
+                  alt="Cards"
+                  width="562"
+                  height="881"
+                />
+                {{ playerCardCounts[player.playerId] }}
+              </span>
+
+              @if (playerCardCounts[player.playerId] === 1) {
+                <span class="uno-badge">
+                  UNO
+                </span>
+              }
+            </div>
+
+            <div
+              class="opponent-cards"
+              [style.--top-card-step.px]="topOpponentCardStep"
+              [style.--left-side-card-margin.px]="leftOpponentCardMargin"
+              [style.--right-side-card-margin.px]="rightOpponentCardMargin"
+            >
+              @for (_ of getCardBacks(player.playerId); track $index) {
+                <img
+                  class="opponent-card-back"
+                  ngSrc="/card-back.png"
+                  alt="Card back"
+                  width="562"
+                  height="881"
+                />
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="center-area">
+        <div class="center-piles-wrap">
+          <img
+            class="direction-overlay"
+            [ngSrc]="directionImage"
+            alt=""
+            aria-hidden="true"
+            width="420"
+            height="300"
+          />
+
+          <div class="pile-area">
+            <div
+              class="card draw-pile"
+              (click)="drawCard()"
+              [class.disabled]="!isMyTurn() || loading"
+            >
+              <span>?</span>
+            </div>
+
+            <div class="pile-label">Draw pile</div>
+          </div>
+
+          <div class="pile-area">
+            @if (gameState.topDiscardCard) {
+              <div
+                class="card top-card"
+                [class.can-drop]="selectedCard && isMyTurn() && !loading"
+                [style.box-shadow]="gameState.topDiscardCard.cardId === chosenColorCardId && chosenColorValue()
+                  ? '0 0 8px ' + chosenColorValue() +
+                    ', 0 0 18px ' + chosenColorValue() +
+                    ', 0 0 36px ' + chosenColorValue() +
+                    ', 0 0 60px ' + chosenColorValue()
+                  : null"
+                [style.border]="gameState.topDiscardCard.cardId === chosenColorCardId && chosenColorValue()
+                  ? '4px solid ' + chosenColorValue()
+                  : null"
+                (click)="onTopCardClick($event)"
+                (dblclick)="openCardPreview(gameState.topDiscardCard, $event)"
+              >
+                <img
+                  class="top-card-img"
+                  [ngSrc]="cardImageUrl(gameState.topDiscardCard)"
+                  [alt]="gameState.topDiscardCard.imageName"
+                  width="140"
+                  height="210"
+                />
+              </div>
+            } @else {
+              <div class="card top-card empty">
+                <span>—</span>
+              </div>
+            }
+
+            <div class="pile-label">Top card</div>
+          </div>
+        </div>
+
+        <div class="action-panel">
+          @if (showUnoButton) {
+            <button
+              type="button"
+              class="uno-button"
+              [style.--uno-timer-duration]="unoTimeLimitMs + 'ms'"
+              (click)="callUno()"
+            >
+              UNO!
+            </button>
+          }
+
+          @if (showResultInput) {
+            <div class="result-input-box">
+              <label for="resultInput">Result</label>
+
+              <input
+                #resultInputField
+                id="resultInput"
+                type="number"
+                min="0"
+                max="9"
+                [value]="resultInput"
+                (input)="onResultInput($event)"
+                (keydown.enter)="confirmResultInput()"
+                placeholder="0-9"
+              />
+
+              <div class="result-actions">
+                <button
+                  type="button"
+                  class="small-btn confirm-btn"
+                  [disabled]="!isResultInputValid()"
+                  (click)="confirmResultInput()"
+                >
+                  OK
+                </button>
+
+                <button
+                  type="button"
+                  class="small-btn cancel-btn"
+                  (click)="cancelResultInput()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (error) {
+            <div class="error-msg">{{ error }}</div>
+          }
+
+          @if (passScreenInfo && !showPassScreen) {
+            <div class="turn-info-msg">
+              <span>{{ passScreenInfo }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (gameFinished) {
+        <div class="game-end-overlay">
+          <div class="game-end-card">
+            <div class="game-end-icon">🏆</div>
+
+            <h2>{{ message ? message.replace(' won the game!', ' wins!') : '' }}</h2>
+
+            <button
+              type="button"
+              class="game-end-btn"
+              (click)="goHome()"
+              (keydown.enter)="goHome()"
+              autofocus
+            >
+              Back to start
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (!gameFinished) {
+      <div class="hand-area">
+        <h3>Your hand ({{ hand.length }} cards)</h3>
+
+        <div
+          class="hand-cards"
+          #handCards
+          [style.--hand-card-step.px]="handCardStep"
+        >
+          @for (card of hand; track $index) {
+            <div
+              class="card hand-card"
+              [class.selected]="selectedCard === card"
+              [class.received-card-highlight]="receivedCardPreview?.cardId === card.cardId"
+              [style.--received-card-color]="receivedCardPreview?.cardId === card.cardId ? getCardHighlightColor(card) : null"
+              (click)="selectCard(card, $event)"
+              (dblclick)="openCardPreview(card, $event)"
+            >
+              <img
+                class="hand-card-img"
+                [ngSrc]="cardImageUrl(card)"
+                [alt]="card.imageName"
+                width="120"
+                height="180"
+              />
+            </div>
+          }
+
+          @if (hand.length === 0) {
+            <div class="empty-hand">No cards in hand</div>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="loading-state">Loading game...</div>
+  }
+</div>
+
+@if (previewCard) {
+  <div class="card-preview-backdrop" (click)="closeCardPreview()">
+    <div class="card-preview" (click)="$event.stopPropagation()">
+      <img
+        class="card-preview-img"
+        [ngSrc]="cardImageUrl(previewCard)"
+        [alt]="previewCard.imageName"
+        width="240"
+        height="360"
+      />
+    </div>
+  </div>
+}
+
+@if (showColorSelection) {
+  <div class="color-selection-backdrop"></div>
+
+  <div class="color-selection-window">
+    <button
+      type="button"
+      class="color-selection-close"
+      (click)="cancelColorSelection()"
+    >
+      ×
+    </button>
+
+    <h3>Choose a color</h3>
+
+    <div class="color-options">
+      <button type="button" class="color-option red" (click)="chooseColor('red')">Red</button>
+      <button type="button" class="color-option blue" (click)="chooseColor('blue')">Blue</button>
+      <button type="button" class="color-option green" (click)="chooseColor('green')">Green</button>
+      <button type="button" class="color-option yellow" (click)="chooseColor('yellow')">Yellow</button>
+    </div>
+  </div>
+}
+
+@if (showMinusOneSelection) {
+  <div class="minus-one-backdrop"></div>
+
+  <div class="minus-one-window">
+    <button
+      type="button"
+      class="minus-one-close"
+      (click)="cancelMinusOneSelection()"
+    >
+      ×
+    </button>
+
+    <h3>Choose a player</h3>
+
+    <div class="minus-one-players">
+      @for (player of getOtherPlayers(); track player) {
+        <button
+          type="button"
+          class="minus-one-player"
+          [class.active]="selectedMinusOnePlayer === player"
+          (click)="selectMinusOnePlayer(player)"
+        >
+          <span>{{ displayPlayerName(player) }}</span>
+          <span>{{ playerCardCounts[player] }} cards</span>
+        </button>
+      }
+    </div>
+
+    @if (selectedMinusOnePlayer) {
+      <h3>Choose a card to give</h3>
+
+      <div class="minus-one-cards">
+        @for (card of hand; track card.cardId) {
+          @if (card.cardId !== pendingCard?.cardId) {
+            <button
+              type="button"
+              class="minus-one-card"
+              (click)="giveCardToSelectedPlayer(card)"
+            >
+              <img
+                class="minus-one-card-img"
+                [ngSrc]="cardImageUrl(card)"
+                [alt]="card.imageName"
+                width="120"
+                height="180"
+              />
+            </button>
+          }
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (showPlayers) {
+  <div class="players-backdrop" (click)="closePlayers()"></div>
+
+  <div class="players-window">
+    <div class="players-window-header">
+      <h3>Players</h3>
+
+      <button class="players-close" type="button" (click)="closePlayers()">
+        ×
+      </button>
+    </div>
+
+    <div class="players-list">
+      @for (player of displayPlayers; track player.id) {
+        <div class="player-row" [class.active]="player.id === getVisibleCurrentPlayerId()">
+          <div class="player-info">
+            <span class="player-name">
+              {{ player.position }}. {{ player.name }}
+            </span>
+
+            <span class="player-id">
+              ID: {{ player.isRealId ? player.id : 'not assigned yet' }}
+            </span>
+          </div>
+
+          @if (player.id === getVisibleCurrentPlayerId()) {
+            <span class="turn-indicator">▶</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (showRules) {
+  <div class="rules-backdrop" (click)="closeRules()"></div>
+
+  <div
+    class="rules-window"
+    [style.left.px]="popup.left"
+    [style.top.px]="popup.top"
+    [style.width.px]="popup.width"
+    [style.height.px]="popup.height"
+  >
+    <div class="resize-handle n" (pointerdown)="startResize($event, 'n')"></div>
+    <div class="resize-handle s" (pointerdown)="startResize($event, 's')"></div>
+    <div class="resize-handle e" (pointerdown)="startResize($event, 'e')"></div>
+    <div class="resize-handle w" (pointerdown)="startResize($event, 'w')"></div>
+    <div class="resize-handle ne" (pointerdown)="startResize($event, 'ne')"></div>
+    <div class="resize-handle nw" (pointerdown)="startResize($event, 'nw')"></div>
+    <div class="resize-handle se" (pointerdown)="startResize($event, 'se')"></div>
+    <div class="resize-handle sw" (pointerdown)="startResize($event, 'sw')"></div>
+
+    <div class="rules-header" (pointerdown)="startDrag($event)">
+      <button class="close-x" type="button" (click)="closeRules()">
+        ×
+      </button>
+    </div>
+
+    <div class="rules-body">
+      <app-game-rules></app-game-rules>
+    </div>
+  </div>
+}
+
+@if (showExitConfirm) {
+  <div class="exit-confirm-backdrop" (click)="closeExitConfirm()"></div>
+
+  <div class="exit-confirm-window">
+    <h3>Leave game?</h3>
+
+    <p>
+      Are you sure you want to leave the game?
+      The current game will end and your progress cannot be restored later.
+    </p>
+
+    <div class="exit-confirm-actions">
+      <button type="button" class="cancel-exit-btn" (click)="closeExitConfirm()">
+        Cancel
+      </button>
+
+      <button type="button" class="confirm-exit-btn" (click)="confirmExit()">
+        Yes, leave game
+      </button>
+    </div>
+  </div>
+}

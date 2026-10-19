@@ -1,0 +1,153 @@
+<div class="page">
+  <div class="content">
+
+    <div class="page-header">
+      <h1>Configuration</h1>
+      <p class="header-subtitle">Define game options before the game begins</p>
+    </div>
+
+    <section class="settings-section">
+      <div class="settings-grid">
+
+        <div class="setting-card">
+          <h3>
+            Artificial player
+            <span class="ai-info-wrapper">
+              <button
+                type="button"
+                class="info-button"
+                aria-label="Artificial player information"
+              >
+                ?
+              </button>
+
+              <span class="ai-info-tooltip">
+                The artificial player can only be used when two players are selected.
+                Please choose <strong>2</strong> under <strong>Number of players</strong> to enable this option.
+              </span>
+            </span>
+          </h3>
+
+          <div class="toggle-row">
+            <mat-slide-toggle
+              [checked]="withAI"
+              [disabled]="playerCount !== 2"
+              (change)="toggleAI($event.checked)"
+            ></mat-slide-toggle>
+          </div>
+        </div>
+
+        <div class="setting-card">
+          <h3>Number of players</h3>
+
+          <div class="button-group">
+            <button class="player-button blue" [class.active]="playerCount === 2" (click)="setPlayerCount(2)">2</button>
+            <button class="player-button green" [class.active]="playerCount === 3" (click)="setPlayerCount(3)">3</button>
+            <button class="player-button yellow" [class.active]="playerCount === 4" (click)="setPlayerCount(4)">4</button>
+          </div>
+        </div>
+
+        <div class="setting-card">
+          <h3>Starting cards</h3>
+
+          <div class="button-group">
+            <button class="card-button green" [class.active]="startingCards === 5" (click)="setStartingCards(5)">5</button>
+            <button class="card-button yellow" [class.active]="startingCards === 7" (click)="setStartingCards(7)">7</button>
+            <button class="card-button red" [class.active]="startingCards === 10" (click)="setStartingCards(10)">10</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="names-section">
+      <h2>Player names</h2>
+
+      <div class="names-card">
+        <div class="name-list">
+          @for (name of playerNames; track $index) {
+            <label class="name-field">
+              <span>
+                {{ withAI && $index === playerCount - 1 ? 'Artificial Player' : 'Player ' + ($index + 1) }}
+              </span>
+
+              <input
+                class="nickname-input"
+                type="text"
+                [value]="name"
+                [placeholder]="'Player ' + ($index + 1)"
+                (input)="setPlayerName($index, $event)"
+                (blur)="normalizePlayerName($index)"
+                [disabled]="withAI && $index === playerCount - 1"
+                [class.input-error]="isDuplicateName($index)"
+                maxlength="26"
+              />
+            </label>
+          }
+        </div>
+        @if (nameError) {
+          <p class="name-error">
+            <span class="error-icon">!</span>
+            {{ nameError }}
+          </p>
+        }
+      </div>
+    </section>
+
+    <button
+      class="save-button"
+      [disabled]="!hasUnsavedChanges || hasInvalidPlayerNames()"
+      (click)="saveChanges()"
+    >
+      @if (hasInvalidPlayerNames()) {
+        Can't save changes
+      } @else if (saved) {
+        ✓ Saved!
+      } @else if (hasUnsavedChanges) {
+        Save changes
+      } @else {
+        Saved
+      }
+    </button>
+
+  </div>
+</div>
+
+@if (showLeaveWarning) {
+  <div class="leave-warning-backdrop" (click)="cancelNavigation()">
+    <div class="leave-warning-modal" (click)="$event.stopPropagation()">
+      <button type="button" class="leave-warning-close" (click)="cancelNavigation()">
+        ×
+      </button>
+
+      <h2>Unsaved changes</h2>
+
+      <p>You changed your configuration. Do you want to save before leaving?</p>
+      @if (nameError) {
+        <p class="modal-error">
+          <span class="error-icon">!</span>
+          {{ nameError }}
+        </p>
+      }
+
+      <div class="leave-warning-actions">
+        <button type="button" class="leave-secondary" (click)="leaveWithoutSaving()">
+          Don’t save
+        </button>
+
+        <button
+          type="button"
+          class="leave-primary"
+          (click)="saveAndLeave()"
+          [disabled]="hasInvalidPlayerNames()"
+        >
+          @if (hasInvalidPlayerNames()) {
+            Can't save changes
+          } @else {
+            Save changes
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
